@@ -1,0 +1,40 @@
+kt:
+  server-addr: localhost:8082
+  authorized-headers:
+    ExampleHeader1:
+      - example value one
+      - example value two
+  header-value-to-auditor-name:
+    example value one: example-auditor-1
+    example value two: example-auditor-2
+
+kt-query:
+  server-addr: localhost:8080
+
+kt-test:
+  server-addr: localhost:8081
+
+metrics-addr: localhost:8083
+health-addr: localhost:8084
+
+# Paste in the keys generated via `go run github.com/signalapp/keytransparency/cmd/generate-keys`
+api:
+  signing-key: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+  vrf-key: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+  prefix-key: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+  opening-key: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+  # fake:
+  #   count: 1
+  #   interval: 10s
+  distinguished: 1m
+  auditors:
+    example-auditor-1: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+    example-auditor-2: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+  min-search-delay: 1s
+  min-monitor-delay: 1s
+  jitter-percent: 10
+
+db:
+  file: example/db
+
+account-db: mock

@@ -1,0 +1,6 @@
+example/db/
+.idea
+cmd/kt-server/kt-server
+cmd/kt-client/kt-client
+cmd/kt-stress/kt-stress
+cmd/generate-keys/generate-keys

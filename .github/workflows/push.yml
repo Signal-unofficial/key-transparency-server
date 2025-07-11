@@ -1,0 +1,56 @@
+name: Build and push Docker image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Checkout main project
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df # v4.2.1
+        with:
+          role-to-assume: ${{ vars.AWS_IAM_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        with:
+          registry: ${{ vars.ECR_REGISTRY }}
+
+      - name: Set up Go
+        id: setup-go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: go.mod
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          cache: 'maven'
+
+      - name: Test Go
+        run: go test ./...
+
+      - name: Build and push the Docker image of the KT server
+        run: |
+          docker build . --file docker/Dockerfile --build-arg GO_VERSION=${{ steps.setup-go.outputs.go-version }} \
+            --tag "${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO }}:${GITHUB_REF_NAME}"
+          docker push "${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO }}:${GITHUB_REF_NAME}"
+
+      - name: Build and push filter key updates lambda artifact to S3
+        working-directory: ./filter-key-updates
+        run: |
+          ./mvnw -e -B deploy -Djgitver.use-version=${{ github.ref_name }} \
+            -DbucketName=${{ vars.S3_BUCKET }} \
+            -DbucketKey=${{ vars.S3_BUCKET_KEY }}

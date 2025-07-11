@@ -1,0 +1,33 @@
+{
+  "Records": [
+    {
+      "eventID": "de07800b8d02f0649ee34aa542ee94d0",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "ApproximateCreationDateTime": "2023-09-20T02:01:56-06:00",
+        "Keys": {
+          "U": {
+            "B": "IiIiIiIiIiIiIiIiIiIiIg=="
+          }
+        },
+        "NewImage": {
+          "D": {
+            "B": "eyJudW1iZXIiOiIrMTExMTExMTExIiwidXNlcm5hbWVIYXNoIjpudWxsLCJyZXNlcnZlZFVzZXJuYW1lSGFzaCI6bnVsbCwiZGV2aWNlcyI6W3siaWQiOjEsIm5hbWUiOm51bGwsImF1dGhUb2tlbiI6IjIuYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIsInNhbHQiOiJhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIsImdjbUlkIjpudWxsLCJhcG5JZCI6bnVsbCwidm9pcEFwbklkIjpudWxsLCJwdXNoVGltZXN0YW1wIjowLCJ1bmluc3RhbGxlZEZlZWRiYWNrIjowLCJmZXRjaGVzTWVzc2FnZXMiOnRydWUsInJlZ2lzdHJhdGlvbklkIjoxMTExLCJzaWduZWRQcmVLZXkiOm51bGwsImxhc3RTZWVuIjoxMTExMTExMTExMTExLCJjcmVhdGVkIjoxMTExMTExMTExMTExLCJ1c2VyQWdlbnQiOiJTaWduYWwtQW5kcm9pZC82LjI4LjEgc2lnbmFsLWNsaS8wLjEyLjAiLCJjYXBhYmlsaXRpZXMiOnsic3RvcmFnZSI6ZmFsc2UsInRyYW5zZmVyIjpmYWxzZSwicG5pIjpmYWxzZSwicGF5bWVudEFjdGl2YXRpb24iOmZhbHNlfSwicG5pUmVnaXN0cmF0aW9uSWQiOjExMTExLCJwbmlTaWduZWRQcmVLZXkiOm51bGx9XSwiaWRlbnRpdHlLZXkiOiJBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsImJhZGdlcyI6W10sInJlZ2lzdHJhdGlvbkxvY2siOm51bGwsInJlZ2lzdHJhdGlvbkxvY2tTYWx0IjpudWxsLCJ2ZXJzaW9uIjowLCJwbmkiOiJjY2NjY2NjYy1jY2NjLWNjY2MtZGRkZC1kZGRkZGRkZGRkZGQiLCJldSI6bnVsbCwicG5pSWRlbnRpdHlLZXkiOm51bGwsImNwdiI6bnVsbCwidWFrIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQT09IiwidXVhIjpmYWxzZSwiaW5DZHMiOnRydWV9"
+          },
+          "P": {
+            "S": "+111111111"
+          },
+          "U": {
+            "B": "IiIiIiIiIiIiIiIiIiIiIg=="
+          }
+        },
+        "SequenceNumber": "131421792200000000021909195349",
+        "SizeBytes": 952,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      }
+    }
+  ]
+}
