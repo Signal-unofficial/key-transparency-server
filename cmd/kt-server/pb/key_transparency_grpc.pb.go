@@ -26,6 +26,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	KeyTransparencyService_TreeSize_FullMethodName       = "/kt.KeyTransparencyService/TreeSize"
 	KeyTransparencyService_Audit_FullMethodName          = "/kt.KeyTransparencyService/Audit"
 	KeyTransparencyService_SetAuditorHead_FullMethodName = "/kt.KeyTransparencyService/SetAuditorHead"
 )
@@ -38,6 +39,8 @@ const (
 // With the exception of the third-party auditor, this service's endpoints are *not* intended to be used by external clients.
 // It is exposed to the public internet by necessity but will reject calls from unauthenticated callers.
 type KeyTransparencyServiceClient interface {
+	// Auditors can query this endpoint to learn the current size of the transparency log.
+	TreeSize(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TreeSizeResponse, error)
 	// Auditors use this endpoint to request a batch of key transparency service updates to audit.
 	Audit(ctx context.Context, in *AuditRequest, opts ...grpc.CallOption) (*AuditResponse, error)
 	// Auditors use this endpoint to return a signature on the log tree root hash corresponding to the last audited update.
@@ -50,6 +53,16 @@ type keyTransparencyServiceClient struct {
 
 func NewKeyTransparencyServiceClient(cc grpc.ClientConnInterface) KeyTransparencyServiceClient {
 	return &keyTransparencyServiceClient{cc}
+}
+
+func (c *keyTransparencyServiceClient) TreeSize(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TreeSizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TreeSizeResponse)
+	err := c.cc.Invoke(ctx, KeyTransparencyService_TreeSize_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *keyTransparencyServiceClient) Audit(ctx context.Context, in *AuditRequest, opts ...grpc.CallOption) (*AuditResponse, error) {
@@ -80,6 +93,8 @@ func (c *keyTransparencyServiceClient) SetAuditorHead(ctx context.Context, in *p
 // With the exception of the third-party auditor, this service's endpoints are *not* intended to be used by external clients.
 // It is exposed to the public internet by necessity but will reject calls from unauthenticated callers.
 type KeyTransparencyServiceServer interface {
+	// Auditors can query this endpoint to learn the current size of the transparency log.
+	TreeSize(context.Context, *emptypb.Empty) (*TreeSizeResponse, error)
 	// Auditors use this endpoint to request a batch of key transparency service updates to audit.
 	Audit(context.Context, *AuditRequest) (*AuditResponse, error)
 	// Auditors use this endpoint to return a signature on the log tree root hash corresponding to the last audited update.
@@ -94,6 +109,9 @@ type KeyTransparencyServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedKeyTransparencyServiceServer struct{}
 
+func (UnimplementedKeyTransparencyServiceServer) TreeSize(context.Context, *emptypb.Empty) (*TreeSizeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TreeSize not implemented")
+}
 func (UnimplementedKeyTransparencyServiceServer) Audit(context.Context, *AuditRequest) (*AuditResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Audit not implemented")
 }
@@ -120,6 +138,24 @@ func RegisterKeyTransparencyServiceServer(s grpc.ServiceRegistrar, srv KeyTransp
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&KeyTransparencyService_ServiceDesc, srv)
+}
+
+func _KeyTransparencyService_TreeSize_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeyTransparencyServiceServer).TreeSize(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KeyTransparencyService_TreeSize_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeyTransparencyServiceServer).TreeSize(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _KeyTransparencyService_Audit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -165,6 +201,10 @@ var KeyTransparencyService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "kt.KeyTransparencyService",
 	HandlerType: (*KeyTransparencyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TreeSize",
+			Handler:    _KeyTransparencyService_TreeSize_Handler,
+		},
 		{
 			MethodName: "Audit",
 			Handler:    _KeyTransparencyService_Audit_Handler,

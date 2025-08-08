@@ -126,6 +126,10 @@ func NewTree(config *PrivateConfig, tx db.TransparencyStore) (*Tree, error) {
 	}, nil
 }
 
+func (t *Tree) GetTransparencyTreeHead() *db.TransparencyTreeHead {
+	return t.latest
+}
+
 func (t *Tree) GetLogTree() *log.Tree                   { return t.logTree }
 func (t *Tree) GetCacheControl() *db.PrefixCacheControl { return t.cacheControl }
 

@@ -33,9 +33,9 @@ type KtUpdateHandler struct {
 func (h *KtUpdateHandler) Update(ctx context.Context, req *tpb.UpdateRequest) (*tpb.UpdateResponse, error) {
 	start := time.Now()
 	res, err := h.update(ctx, req, 5*time.Second)
-	lbls := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
-	metrics.IncrCounterWithLabels([]string{"update_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"update_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
+	metrics.IncrCounterWithLabels([]string{"update_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"update_duration"}, start, labels)
 	if err, _ := status.FromError(err); err.Code() == codes.Unknown {
 		util.Log().Errorf("Unexpected update error in key transparency service: %v", err.Err())
 	}

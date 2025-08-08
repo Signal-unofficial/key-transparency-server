@@ -33,6 +33,17 @@ type KtHandler struct {
 	pb.UnimplementedKeyTransparencyServiceServer
 }
 
+func (h *KtHandler) TreeSize(ctx context.Context, req *emptypb.Empty) (*pb.TreeSizeResponse, error) {
+	auditor, err := extractAuditorName(ctx)
+	if err != nil {
+		return nil, err
+	}
+	tree, err := h.config.NewTree(h.tx)
+	labels := []metrics.Label{successLabel(err), auditorLabel(auditor)}
+	metrics.IncrCounterWithLabels([]string{"tree_size_requests"}, 1, labels)
+	return &pb.TreeSizeResponse{TreeSize: tree.GetTransparencyTreeHead().TreeSize}, err
+}
+
 func (h *KtHandler) Audit(ctx context.Context, req *pb.AuditRequest) (*pb.AuditResponse, error) {
 	auditor, err := extractAuditorName(ctx)
 	if err != nil {
@@ -41,9 +52,9 @@ func (h *KtHandler) Audit(ctx context.Context, req *pb.AuditRequest) (*pb.AuditR
 
 	start := time.Now()
 	res, err := h.audit(ctx, req)
-	lbls := []metrics.Label{successLabel(err), auditorLabel(auditor)}
-	metrics.IncrCounterWithLabels([]string{"audit_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"audit_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), auditorLabel(auditor)}
+	metrics.IncrCounterWithLabels([]string{"audit_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"audit_duration"}, start, labels)
 	return res, err
 }
 
@@ -72,9 +83,9 @@ func (h *KtHandler) SetAuditorHead(ctx context.Context, head *tpb.AuditorTreeHea
 		return nil, err
 	}
 	res, err := h.setAuditorHead(ctx, head, auditor)
-	lbls := []metrics.Label{successLabel(err), auditorLabel(auditor)}
-	metrics.IncrCounterWithLabels([]string{"auditor_head_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"auditor_head_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), auditorLabel(auditor)}
+	metrics.IncrCounterWithLabels([]string{"auditor_head_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"auditor_head_duration"}, start, labels)
 	return res, err
 }
 

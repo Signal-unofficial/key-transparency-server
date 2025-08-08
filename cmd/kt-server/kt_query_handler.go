@@ -35,9 +35,9 @@ type KtQueryHandler struct {
 func (h *KtQueryHandler) Distinguished(ctx context.Context, req *pb.DistinguishedRequest) (*pb.DistinguishedResponse, error) {
 	start := time.Now()
 	res, err := h.distinguished(req)
-	lbls := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
-	metrics.IncrCounterWithLabels([]string{"distinguished_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"distinguished_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
+	metrics.IncrCounterWithLabels([]string{"distinguished_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"distinguished_duration"}, start, labels)
 	if err, _ := status.FromError(err); err.Code() == codes.Unknown {
 		util.Log().Errorf("Unexpected search error for distinguished key in key transparency service: %v", err.Err())
 	}
@@ -78,9 +78,9 @@ func (h *KtQueryHandler) Search(ctx context.Context, req *pb.SearchRequest) (*pb
 		return nil, err
 	}
 	res, err := h.search(req, tree)
-	lbls := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
-	metrics.IncrCounterWithLabels([]string{"search_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"search_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
+	metrics.IncrCounterWithLabels([]string{"search_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"search_duration"}, start, labels)
 
 	if err, _ := status.FromError(err); err.Code() == codes.Unknown {
 		util.Log().Errorf("Unexpected search error in key transparency service: %v", err.Err())
@@ -88,7 +88,7 @@ func (h *KtQueryHandler) Search(ctx context.Context, req *pb.SearchRequest) (*pb
 
 	// Achieve some minimum delay with jitter on the request to avoid a timing side-channel.
 	addRandomDelay(start, time.Now(), h.config.MinimumSearchDelay, h.config.JitterPercent, "search")
-	metrics.MeasureSinceWithLabels([]string{"total_search_duration"}, start, lbls)
+	metrics.MeasureSinceWithLabels([]string{"total_search_duration"}, start, labels)
 	return res, err
 }
 
@@ -243,15 +243,15 @@ func (h *KtQueryHandler) phoneNumberSearch(req *pb.SearchRequest, tree *transpar
 func (h *KtQueryHandler) Monitor(ctx context.Context, req *pb.MonitorRequest) (*pb.MonitorResponse, error) {
 	start := time.Now()
 	res, err := h.monitor(req)
-	lbls := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
-	metrics.IncrCounterWithLabels([]string{"monitor_requests"}, 1, lbls)
-	metrics.MeasureSinceWithLabels([]string{"monitor_duration"}, start, lbls)
+	labels := []metrics.Label{successLabel(err), grpcStatusLabel(err)}
+	metrics.IncrCounterWithLabels([]string{"monitor_requests"}, 1, labels)
+	metrics.MeasureSinceWithLabels([]string{"monitor_duration"}, start, labels)
 	if err, _ := status.FromError(err); err.Code() == codes.Unknown {
 		util.Log().Errorf("Unexpected monitor error in key transparency service: %v", err.Err())
 	}
 	// Achieve some minimum delay with jitter on the request to avoid a timing side-channel.
 	addRandomDelay(start, time.Now(), h.config.MinimumMonitorDelay, h.config.JitterPercent, "monitor")
-	metrics.MeasureSinceWithLabels([]string{"total_monitor_duration"}, start, lbls)
+	metrics.MeasureSinceWithLabels([]string{"total_monitor_duration"}, start, labels)
 	return res, err
 }
 
