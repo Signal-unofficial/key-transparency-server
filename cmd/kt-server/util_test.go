@@ -161,3 +161,30 @@ func TestStoreAuditorNameInterceptor_Success(t *testing.T) {
 	assert.True(t, ok, "expected string response")
 	assert.Equal(t, "example-auditor-1", auditorName)
 }
+
+func TestParseRpcMethodString_Success(t *testing.T) {
+	service, method, err := parseFullMethodString("/package.service/method")
+
+	assert.NoError(t, err)
+	assert.Equal(t, "service", service)
+	assert.Equal(t, "method", method)
+
+}
+
+var invalidRpcMethodStrings = []string{
+	"/package.service/method/",
+	"package.service/method",
+	"package.service.method",
+	"service/method",
+	".service.method",
+}
+
+func TestParseRpcMethodString_Failure(t *testing.T) {
+	for _, invalidMethodString := range invalidRpcMethodStrings {
+		service, method, err := parseFullMethodString(invalidMethodString)
+
+		assert.Error(t, err)
+		assert.Empty(t, service)
+		assert.Empty(t, method)
+	}
+}

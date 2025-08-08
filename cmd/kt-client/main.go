@@ -74,7 +74,7 @@ func main() {
 
 	defer ktConn.Close()
 
-	ktClient := pb.NewKeyTransparencyServiceClient(ktConn)
+	ktAuditorClient := pb.NewKeyTransparencyAuditorServiceClient(ktConn)
 
 	switch flag.Arg(0) {
 	case "distinguished":
@@ -90,7 +90,7 @@ func main() {
 	case "monitor-timing":
 		handleMonitorTiming(ktQueryClient)
 	case "audit":
-		handleAudit(ktClient)
+		handleAudit(ktAuditorClient)
 	default:
 		log.Fatal("Unexpected operation requested. Allowed arguments: search, update, audit, config")
 	}

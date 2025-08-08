@@ -212,8 +212,14 @@ func main() {
 			util.Log().Fatalf("Failed to create listener for kt server: %v", err)
 		}
 
-		ktServer := grpc.NewServer(getServerOptions(config.KtServiceConfig, []grpc.UnaryServerInterceptor{storeAuditorNameInterceptor(config.KtServiceConfig)})...)
+		ktServer := grpc.NewServer(getServerOptions(config.KtServiceConfig, []grpc.UnaryServerInterceptor{
+			// Downstream interceptors expect the auditor name to be stored in the context, so this interceptor must
+			// be listed first.
+			storeAuditorNameInterceptor(config.KtServiceConfig),
+			grpcServiceNameMetricsInterceptor()})...)
 		pb.RegisterKeyTransparencyServiceServer(ktServer, ktHandler)
+		pb.RegisterKeyTransparencyAuditorServiceServer(ktServer, ktHandler)
+
 		util.Log().Infof("Starting kt server at: %v", ktServiceConfig.ServerAddr)
 		if config.KtTestServiceConfig == nil {
 			healthCheck.SetServingStatus(readiness, healthpb.HealthCheckResponse_SERVING)

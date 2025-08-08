@@ -31,6 +31,7 @@ type KtHandler struct {
 	auditorTreeHeadsCh chan<- updateAuditorTreeHeadRequest // Channel used to set auditor tree heads
 
 	pb.UnimplementedKeyTransparencyServiceServer
+	pb.UnimplementedKeyTransparencyAuditorServiceServer
 }
 
 func (h *KtHandler) TreeSize(ctx context.Context, req *emptypb.Empty) (*pb.TreeSizeResponse, error) {

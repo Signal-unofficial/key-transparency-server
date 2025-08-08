@@ -10,7 +10,9 @@ import (
 	"context"
 	"crypto/subtle"
 	"fmt"
+	"strings"
 
+	"github.com/hashicorp/go-metrics"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -95,6 +97,37 @@ func storeAuditorNameInterceptor(config *config.ServiceConfig) func(ctx context.
 		ctx = context.WithValue(ctx, AuditorNameContextKey, auditorName)
 		return handler(ctx, req)
 	}
+}
+
+func grpcServiceNameMetricsInterceptor() grpc.UnaryServerInterceptor {
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		service, method, err := parseFullMethodString(info.FullMethod)
+		if err != nil {
+			return nil, err
+		}
+		auditorName, ok := ctx.Value(AuditorNameContextKey).(string)
+		if !ok {
+			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid type for auditor name. expected string, got %T", auditorName))
+		}
+		labels := []metrics.Label{{Name: "service", Value: service}, {Name: "method", Value: method}, {Name: "auditor", Value: auditorName}}
+		metrics.IncrCounterWithLabels([]string{"kt_handler"}, 1, labels)
+
+		return handler(ctx, req)
+	}
+}
+
+// Parses the full RPC method string for the service and method names.
+// The string is expected to be in the format: /package.service/method.
+func parseFullMethodString(fullMethod string) (string, string, error) {
+	parts := strings.Split(fullMethod, "/")
+	if len(parts) != 3 || len(parts[1]) == 0 || len(parts[2]) == 0 {
+		return "", "", status.Error(codes.InvalidArgument, fmt.Sprintf("unexpected RPC path: %s", fullMethod))
+	}
+	parsedPackageService := strings.Split(parts[1], ".")
+	if len(parsedPackageService) != 2 || len(parsedPackageService[0]) == 0 || len(parsedPackageService[1]) == 0 {
+		return "", "", status.Error(codes.InvalidArgument, fmt.Sprintf("unexpected RPC path: %s", fullMethod))
+	}
+	return parsedPackageService[1], parts[2], nil
 }
 
 // validateAuthorizedHeaders ensures that at least one of the specified header to value mappings is present on the request

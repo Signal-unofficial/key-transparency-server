@@ -14,7 +14,7 @@ import (
 	"github.com/signalapp/keytransparency/cmd/kt-server/pb"
 )
 
-func handleAudit(client pb.KeyTransparencyServiceClient) {
+func handleAudit(client pb.KeyTransparencyAuditorServiceClient) {
 	if flag.Arg(1) == "" {
 		log.Fatal("No starting position given. Usage: kt-client audit <start> <limit>")
 	} else if flag.Arg(2) == "" {
