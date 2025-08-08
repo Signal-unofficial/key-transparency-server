@@ -43,10 +43,10 @@ type Config struct {
 	KtQueryServiceConfig *ServiceConfig `yaml:"kt-query"`
 	KtTestServiceConfig  *ServiceConfig `yaml:"kt-test"`
 
-	LogOutputFile envstr `yaml:"log-output"`
-	MetricsAddr   envstr `yaml:"metrics-addr"`
-	DatadogAddr   envstr `yaml:"datadog-addr"`
-	HealthAddr    envstr `yaml:"health-addr"`
+	LogOutputFile string `yaml:"log-output"`
+	MetricsAddr   string `yaml:"metrics-addr"`
+	DatadogAddr   string `yaml:"datadog-addr"`
+	HealthAddr    string `yaml:"health-addr"`
 
 	APIConfig      *APIConfig      `yaml:"api"`
 	StreamConfig   *StreamConfig   `yaml:"stream"`
@@ -62,7 +62,7 @@ type CacheConfig struct {
 }
 
 type ServiceConfig struct {
-	ServerAddr envstr `yaml:"server-addr"`
+	ServerAddr string `yaml:"server-addr"`
 	// a map of headers to a list of authorized values. at least one header to value mapping must be present on client requests
 	AuthorizedHeaders map[string][]string `yaml:"authorized-headers"`
 	// a map of header values to auditor name. each key in this map should match a value in the AuthorizedHeaders map.
@@ -85,7 +85,7 @@ type APIConfig struct {
 	FakeUpdates *FakeUpdates `yaml:"fake"`
 
 	// A map of auditor name to its hex-encoded public signature key.
-	AuditorConfigs map[string]envstr `yaml:"auditors"`
+	AuditorConfigs map[string]string `yaml:"auditors"`
 	auditorConfigs map[string]ed25519.PublicKey
 
 	Distinguished time.Duration `yaml:"distinguished"`
@@ -308,7 +308,7 @@ func Read(filename string) (*Config, error) {
 
 	parsed.APIConfig.auditorConfigs = map[string]ed25519.PublicKey{}
 	for auditorName, publicKey := range parsed.APIConfig.AuditorConfigs {
-		pubKey, err := hex.DecodeString(publicKey.String())
+		pubKey, err := hex.DecodeString(publicKey)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse auditor public key: %v for auditor %s", err, auditorName)
@@ -344,7 +344,7 @@ func Read(filename string) (*Config, error) {
 
 func (c *Config) SetLogOutput() error {
 	if c.LogOutputFile != "" {
-		f, err := os.OpenFile(c.LogOutputFile.String(), os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+		f, err := os.OpenFile(c.LogOutputFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 		if err != nil {
 			return fmt.Errorf("Failed to open log file: %v", err)
 		}

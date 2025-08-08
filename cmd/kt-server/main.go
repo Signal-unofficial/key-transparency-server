@@ -58,11 +58,11 @@ func main() {
 
 	var zeroLogLogger zerolog.Logger
 	var logWriter io.Writer
-	if len(config.LogOutputFile.String()) > 0 {
+	if len(config.LogOutputFile) > 0 {
 		logWriter = zerolog.MultiLevelWriter(
 			consoleWriter,
 			&lumberjack.Logger{
-				Filename:   config.LogOutputFile.String(),
+				Filename:   config.LogOutputFile,
 				MaxBackups: 10,
 				Compress:   true,
 			},
@@ -84,9 +84,9 @@ func main() {
 	healthCheck.SetServingStatus(readiness, healthpb.HealthCheckResponse_NOT_SERVING)
 
 	// Configure healthCheck service to listen on its dedicated port
-	lis, err := net.Listen("tcp", config.HealthAddr.String())
+	lis, err := net.Listen("tcp", config.HealthAddr)
 	if err != nil {
-		util.Log().Fatalf("failed to listen on health check port %v: %v", config.HealthAddr.String(), err)
+		util.Log().Fatalf("failed to listen on health check port %v: %v", config.HealthAddr, err)
 	}
 	util.Log().Infof("Starting health check server at: %v", config.HealthAddr)
 
@@ -94,8 +94,8 @@ func main() {
 	go healthServer.Serve(lis)
 
 	// Start the metrics server.
-	exportMetrics(config.DatadogAddr.String())
-	go metricsServer(config.MetricsAddr.String())
+	exportMetrics(config.DatadogAddr)
+	go metricsServer(config.MetricsAddr)
 
 	// Start the inserter thread.
 	tx, err := config.DatabaseConfig.Connect()
@@ -246,5 +246,5 @@ func main() {
 }
 
 func createListener(serviceConfig *config.ServiceConfig) (net.Listener, error) {
-	return net.Listen("tcp", serviceConfig.ServerAddr.String())
+	return net.Listen("tcp", serviceConfig.ServerAddr)
 }
