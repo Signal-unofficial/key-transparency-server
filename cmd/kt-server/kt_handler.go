@@ -71,6 +71,8 @@ func (h *KtHandler) audit(ctx context.Context, req *pb.AuditRequest) (*pb.AuditR
 	if err != nil {
 		if errors.Is(err, transparency.ErrInvalidArgument) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
+		} else if errors.Is(err, transparency.ErrOutOfRange) {
+			return nil, status.Error(codes.OutOfRange, err.Error())
 		}
 		return nil, err
 	}

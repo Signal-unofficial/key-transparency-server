@@ -45,6 +45,7 @@ const (
 
 var (
 	ErrInvalidArgument    = errors.New("invalid request argument")
+	ErrOutOfRange         = errors.New("querying past end of log")
 	ErrFailedPrecondition = errors.New("failed precondition")
 )
 
@@ -742,7 +743,7 @@ func (t *Tree) finishMonitoring(index [32]byte, key *pb.MonitorKey, res *prefix.
 // provided to a third-party auditor.
 func (t *Tree) Audit(start, limit uint64) ([]*pb.AuditorUpdate, bool, error) {
 	if start > t.latest.TreeSize {
-		return nil, false, fmt.Errorf("%w: auditing can not start past end of tree", ErrInvalidArgument)
+		return nil, false, fmt.Errorf("%w: auditing can not start past end of tree", ErrOutOfRange)
 	} else if start == t.latest.TreeSize {
 		return nil, false, nil
 	} else if limit > 1000 {
