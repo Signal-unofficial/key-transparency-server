@@ -17,6 +17,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/signalapp/keytransparency/cmd/internal/config"
 	"github.com/signalapp/keytransparency/cmd/kt-server/pb"
@@ -91,8 +92,13 @@ func main() {
 		handleMonitorTiming(ktQueryClient)
 	case "audit":
 		handleAudit(ktAuditorClient)
+	case "tree-size":
+		res, err := ktAuditorClient.TreeSize(context.Background(), &emptypb.Empty{})
+		checkErr("tree size request", err)
+		p.Println("Tree Size: ", res.TreeSize)
 	default:
-		log.Fatal("Unexpected operation requested. Allowed arguments: search, update, audit, config")
+		log.Fatal("Unexpected operation requested. Allowed arguments: \n- distinguished" +
+			"\n- search\n- search-timing\n- update\n- monitor\n- monitor-timing\n- audit\n- tree-size")
 	}
 }
 
