@@ -109,7 +109,7 @@ func grpcServiceNameMetricsInterceptor() grpc.UnaryServerInterceptor {
 		if !ok {
 			return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("invalid type for auditor name. expected string, got %T", auditorName))
 		}
-		labels := []metrics.Label{{Name: "service", Value: service}, {Name: "method", Value: method}, {Name: "auditor", Value: auditorName}}
+		labels := []metrics.Label{{Name: "grpcService", Value: service}, {Name: "method", Value: method}, {Name: "auditor", Value: auditorName}}
 		metrics.IncrCounterWithLabels([]string{"kt_handler"}, 1, labels)
 
 		return handler(ctx, req)
