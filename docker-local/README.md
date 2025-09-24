@@ -21,6 +21,5 @@ Docker Compose configuration to support local testing with AWS services.
    kt-client <...>
    ```
 
-1. Stop the server
-1. Stop the container
+1. Stop the containers
    - `docker compose -f docker-local/docker-compose.yml down`
