@@ -1,14 +1,16 @@
 name: 'kt-dynamodb'
 services:
   'dynamodb':
+    restart: 'on-failure'
     image: amazon/dynamodb-local:2.5.2
   'server':
-    restart: on-failure
+    restart: 'on-failure'
     links:
       - 'dynamodb'
     build:
       context: ".."
       dockerfile: "./docker/Dockerfile"
+      target: "run-server"
     command: [ "-config", "/src/config.yaml" ]
     environment:
       - AWS_ACCESS_KEY_ID=local
@@ -22,3 +24,14 @@ services:
         source: '../example/config.yaml'
         target: '/src/config.yaml'
         read_only: true
+  'client':
+    restart: 'on-failure'
+    profiles:
+      - 'client'
+    links:
+      - 'server'
+    build:
+      context: ".."
+      dockerfile: "./docker/Dockerfile"
+      target: "run-client"
+    entrypoint: [ "sh" ]
