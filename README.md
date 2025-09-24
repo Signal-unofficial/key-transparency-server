@@ -25,15 +25,19 @@ accommodates Signal's specific application requirements and therefore contains s
 
 Repo Overview
 -------------
+
 Key transparency code:
+
 - `tree`: Defines the data structures used in the key transparency log, along with the logic to interact with them and generate proofs for various operations.
 
 Operating the log:
+
 - `cmd/kt-server`: Defines the server logic for interacting with the key transparency log.
 - `db`: Defines various database and cache implementations.
 - `filter-key-updates`: Defines the lambda that reads account changes from a DynamoDB stream and writes relevant updates to a Kinesis stream.
 
 Tools/testing:
+
 - `cmd/kt-client`: A tool for running various operations against a local or remote key transparency server.
 - `cmd/kt-stress`: A tool for stress testing a key transparency server.
 - `cmd/generate-auditing-test-vectors`: Generates test vectors for an auditor implementation.
@@ -52,6 +56,7 @@ All three services communicate via [gRPC](https://grpc.io/). Their definitions c
 
 Data Structures
 ---------------
+
 The key transparency log consists of two main types of data structures: a _log tree_ and _prefix trees_.
 
 Log entries are stored as leaves in the log tree, and prefix trees are used to facilitate
@@ -71,6 +76,7 @@ go test ./...
 
 Quickstart
 ----------
+
 You can run a key transparency server locally using [LevelDB](https://github.com/google/leveldb) as a backing database.
 To do so, first run the `generate-keys` command to generate a new set of private keys:
 
@@ -107,6 +113,7 @@ go run github.com/signalapp/keytransparency/cmd/kt-client distinguished
 ```
 
 To look up a username hash, you must also provide the ACI and ACI identity key:
+
 ```shell
 # Search for an E164
 go run github.com/signalapp/keytransparency/cmd/kt-client \
@@ -117,6 +124,7 @@ search <UUID> <base64_encoded_aci_identity_key>
 
 To look up an E164, you must provide the ACI, the ACI identity key, and an unidentified access key.
 If using the `mock` AccountDB configuration, the default `-uak` value matches the one used by the mock implementation and can be left out.
+
 ```shell
 # Search for an E164
 go run github.com/signalapp/keytransparency/cmd/kt-client \
@@ -125,6 +133,7 @@ search <UUID> <base64_encoded_aci_identity_key>
 ```
 
 To time the latency of a search or monitor request:
+
 ```shell
 go run github.com/signalapp/keytransparency/cmd/kt-client -sample-size 50 -num-samples 10 \
   search-timing <UUID> <base64_encoded_aci_identity_key>

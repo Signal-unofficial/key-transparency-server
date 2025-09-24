@@ -7,6 +7,7 @@ WORKDIR /src/cmd/kt-server/
 RUN go build
 
 FROM --platform=linux/amd64 alpine AS run
+
 COPY --from=build [ "/src/cmd/kt-server/kt-server/", "/bin/kt-server/" ]
 
 ENTRYPOINT [ "/bin/kt-server" ]
