@@ -4,3 +4,4 @@ cmd/kt-server/kt-server
 cmd/kt-client/kt-client
 cmd/kt-stress/kt-stress
 cmd/generate-keys/generate-keys
+**/maven-wrapper.jar

@@ -44,7 +44,5 @@ api:
 
 db:
   file: example/db
-  table: kt_local
-  parallel: 2
 
 account-db: mock
