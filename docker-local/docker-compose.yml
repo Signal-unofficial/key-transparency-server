@@ -19,19 +19,25 @@ services:
       - AWS_REGION=local-kt
     ports:
       - "8000:8080"
+      - ":8081"
     volumes:
       - type: 'bind'
         source: '../example/config.yaml'
         target: '/src/config.yaml'
         read_only: true
   'client':
-    restart: 'on-failure'
     profiles:
       - 'client'
-    links:
+    depends_on:
       - 'server'
     build:
       context: ".."
       dockerfile: "./docker/Dockerfile"
       target: "run-client"
     entrypoint: [ "sh" ]
+    volumes:
+      - type: 'bind'
+        source: '../example/config.yaml'
+        target: '/src/config.yaml'
+        read_only: true
+    network_mode: 'host'

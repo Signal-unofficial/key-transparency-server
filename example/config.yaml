@@ -1,3 +1,7 @@
+# Test server, used for development
+kt-test:
+  server-addr: localhost:8081
+
 kt:
   server-addr: localhost:8082
   authorized-headers:
@@ -18,9 +22,6 @@ kt-query:
   header-value-to-auditor-name:
     example value one: example-auditor-1
     example value two: example-auditor-2
-
-kt-test:
-  server-addr: localhost:8081
 
 metrics-addr: localhost:8083
 health-addr: localhost:8084
