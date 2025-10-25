@@ -1,6 +1,12 @@
 ARG GO_VERSION=golang:1.24.0-alpine
 ARG ALPINE_VERSION=alpine:latest
 
+FROM ${GO_VERSION} AS build-key-generator
+
+COPY [ "./", "/src/" ]
+WORKDIR /src/cmd/generate-keys/
+RUN go build
+
 FROM ${GO_VERSION} AS build-server
 
 COPY [ "./", "/src/" ]
@@ -12,6 +18,13 @@ FROM ${GO_VERSION} AS build-client
 COPY [ "./", "/src/" ]
 WORKDIR /src/cmd/kt-client/
 RUN go build
+
+FROM ${ALPINE_VERSION} AS generate-keys
+
+COPY --from=build-key-generator [ "/src/cmd/generate-keys/generate-keys/", "/usr/local/bin/" ]
+
+WORKDIR /usr/local/bin/
+ENTRYPOINT [ "/usr/local/bin/generate-keys" ]
 
 FROM ${ALPINE_VERSION} AS run-server
 

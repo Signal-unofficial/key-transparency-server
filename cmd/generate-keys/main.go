@@ -16,27 +16,31 @@ import (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
+	// Signing key
 	signingKey := make([]byte, ed25519.SeedSize)
 	if _, err := rand.Read(signingKey); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Signing Key:     %x\n", signingKey)
+	fmt.Printf("signing-key: %x\n", signingKey)
 
+	// VRF Private Key
 	vrfPriv := make([]byte, ed25519.SeedSize)
 	if _, err := rand.Read(vrfPriv); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("VRF Private Key: %x\n", vrfPriv)
+	fmt.Printf("vrf-key: %x\n", vrfPriv)
 
+	// Prefix Aes Key
 	prefixAesKey := make([]byte, 32)
 	if _, err := rand.Read(prefixAesKey); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Prefix Aes Key:     %x\n", prefixAesKey)
+	fmt.Printf("prefix-key: %x\n", prefixAesKey)
 
+	// Opening Key
 	openingKey := make([]byte, 32)
 	if _, err := rand.Read(openingKey); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Opening Key:     %x\n", openingKey)
+	fmt.Printf("opening-key: %x\n", openingKey)
 }

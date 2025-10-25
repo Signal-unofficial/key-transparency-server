@@ -84,6 +84,12 @@ To do so, first run the `generate-keys` command to generate a new set of private
 go run github.com/signalapp/keytransparency/cmd/generate-keys
 ```
 
+Or, if you have Docker installed, rather than Go:
+
+```shell
+docker compose -f ./docker-local/docker-compose.yml run --rm -it generate-keys
+```
+
 Copy-paste the keys into `example/config.yaml`. Then run the read-only, audit, and test servers locally (all three are required for
 `kt-client` to have full functionality):
 

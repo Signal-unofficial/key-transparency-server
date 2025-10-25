@@ -1,5 +1,11 @@
 name: 'kt-dynamodb'
 services:
+  'generate-keys':
+    build:
+      context: '..'
+      dockerfile: './docker/Dockerfile'
+      target: 'generate-keys'
+    network_mode: 'none'
   'dynamodb':
     restart: 'on-failure'
     image: amazon/dynamodb-local:2.5.2
