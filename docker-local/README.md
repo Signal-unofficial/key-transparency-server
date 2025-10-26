@@ -11,7 +11,7 @@ Docker Compose configuration to support local testing with AWS services.
 1. Start the DynamoDB container in the background:
 
    ```shell
-   docker compose -f docker-local/docker-compose.yml up -d
+   docker compose -f docker-local/docker-compose.yml up -d server
    ```
 
 1. Test with kt-client. Run the client:
