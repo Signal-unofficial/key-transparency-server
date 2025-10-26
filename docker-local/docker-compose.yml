@@ -17,20 +17,18 @@ services:
       context: ".."
       dockerfile: "./docker/Dockerfile"
       target: "run-server"
-    command: [ "-config", "/src/config.yaml" ]
+    command: [ "-config", "/run/secrets/config.yaml" ]
     environment:
       - AWS_ACCESS_KEY_ID=local
       - AWS_SECRET_ACCESS_KEY=local
       - AWS_ENDPOINT_URL=http://dynamodb:8000
       - AWS_REGION=local-kt
     ports:
-      - "8000:8080"
-      - ":8081"
-    volumes:
-      - type: 'bind'
-        source: '../example/config.yaml'
-        target: '/src/config.yaml'
-        read_only: true
+      - "8080:8080"
+      - "8081:8081"
+    secrets:
+      - source: 'config'
+        target: '/run/secrets/'
   'client':
     profiles:
       - 'client'
@@ -41,9 +39,10 @@ services:
       dockerfile: "./docker/Dockerfile"
       target: "run-client"
     entrypoint: [ "sh" ]
-    volumes:
-      - type: 'bind'
-        source: '../example/config.yaml'
-        target: '/src/config.yaml'
-        read_only: true
+    secrets:
+      - source: 'config'
+        target: '/run/secrets/'
     network_mode: 'host'
+secrets:
+  'config':
+    file: '../example/'
