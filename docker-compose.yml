@@ -152,4 +152,4 @@ secrets:
   'test-config':
     file: './cmd/kt-server/example/'
   'config':
-    file: './example/'
+    file: './config/'

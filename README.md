@@ -87,15 +87,19 @@ Quickstart
 
 You can run a key transparency server locally using
 [LevelDB](https://github.com/google/leveldb) as a backing database.
-To do so, first generate a new set of private keys:
+
+First, copy [`config/example_config.yaml`](./example/example_config.yaml)
+to [`config/config.yaml`](./example/config.yaml).
+
+Next, generate a new set of private keys:
 
 ```shell
 docker compose run --rm generate-keys
 ```
 
-Copy and paste the keys into `example/config.yaml`. Then run the read-only,
-audit, and test servers locally (all three are required for `kt-client`
-to have full functionality):
+Copy and paste the keys into [`config.yaml`](./config.yaml).
+Then run the read-only, audit, and test servers locally
+(all three are required for `kt-client` to have full functionality):
 
 ```shell
 docker compose up -d server
@@ -107,7 +111,8 @@ To shut down the servers:
 docker compose down server
 ```
 
-You can now access metrics and the transparency servers
+While the servers are running, you can access
+metrics and the transparency servers
 at the configured addresses by running `kt-client`:
 
 ```shell
@@ -123,23 +128,27 @@ exit
 
 ```shell
 # Add an ACI to the log
-kt-client update aci <UUID> <base64_encoded_aci_identity_key>
+kt-client -config /run/secrets/config.yaml \
+  update aci <UUID> <base64_encoded_aci_identity_key>
 
 # Add an E164 to the log. Be sure to use the same ACI as a previous update.
-kt-client update aci <e164_formatted_number> <UUID>
+kt-client -config /run/secrets/config.yaml \
+  update aci <e164_formatted_number> <UUID>
 
 # Search for the ACI and provide the value it's mapped to
-kt-client search <UUID> <base64_encoded_aci_identity_key>
+kt-client -config /run/secrets/config.yaml \
+  search <UUID> <base64_encoded_aci_identity_key>
 
 # Look up the distinguished key
-kt-client distinguished
+kt-client -config /run/secrets/config.yaml \
+  distinguished
 ```
 
 To look up a username hash, you must also provide the ACI and ACI identity key:
 
 ```shell
 # Search for an E164
-kt-client \
+kt-client -config /run/secrets/config.yaml \
   -username_hash <base64url_encoded_username_hash> \
   search <UUID> <base64_encoded_aci_identity_key>
 ```
@@ -149,7 +158,7 @@ If using the `mock` AccountDB configuration, the default `-uak` value matches th
 
 ```shell
 # Search for an E164
-kt-client \
+kt-client -config /run/secrets/config.yaml \
   -e164 <e164_formatted_number> -uak <base64_encoded_uak> \
   search <UUID> <base64_encoded_aci_identity_key>
 ```
@@ -157,12 +166,14 @@ kt-client \
 To time the latency of a search or monitor request:
 
 ```shell
-kt-client -sample-size 50 -num-samples 10 \
+kt-client -config /run/secrets/config.yaml \
+  -sample-size 50 -num-samples 10 \
   search-timing <UUID> <base64_encoded_aci_identity_key>
 
 # Note that this will make a search request first so that it can compute the commitment index
 # necessary for a monitor request
-kt-client -sample-size 50 -num-samples 10 \
+kt-client -config /run/secrets/config.yaml \
+  -sample-size 50 -num-samples 10 \
   monitor-timing <UUID> <base64_encoded_aci_identity_key>
 ```
 

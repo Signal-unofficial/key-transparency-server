@@ -5,13 +5,13 @@ cmd/kt-server/kt-server
 cmd/kt-client/kt-client
 cmd/kt-stress/kt-stress
 cmd/generate-keys/generate-keys
-example
 docs
 Docker*
 docker-compose*
 *.docker*
 **/tmp
 **/temp
+config
 
 # Different line endings on Windows vs Linux.
 # Will fail if using the wrong line endings

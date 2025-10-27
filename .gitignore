@@ -1,4 +1,4 @@
-example/db/
+.git
 .idea
 .vscode
 cmd/kt-server/kt-server
@@ -8,3 +8,5 @@ cmd/generate-keys/generate-keys
 **/maven-wrapper.jar
 **/tmp
 **/temp
+config/**
+!config/example_config.yaml
