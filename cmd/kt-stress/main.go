@@ -28,7 +28,7 @@ import (
 var (
 	p = message.NewPrinter(message.MatchLanguage("en"))
 
-	serverAddr = flag.String("addr", "localhost:8080", "Address of test server.")
+	serverAddr = flag.String("addr", "server:8080", "Address of test server.")
 	threads    = flag.Int("threads", 1, "Number of threads to use.")
 )
 

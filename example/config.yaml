@@ -1,9 +1,9 @@
 # Test server, used for development
-kt-test:
-  server-addr: localhost:8081
+# kt-test:
+#   server-addr: server:8081
 
 kt:
-  server-addr: localhost:8082
+  server-addr: server:8082
   authorized-headers:
     ExampleHeader1:
       - example value one
@@ -13,7 +13,7 @@ kt:
     example value two: example-auditor-2
 
 kt-query:
-  server-addr: localhost:8080
+  server-addr: server:8080
   # at least one header-value mapping in this map will be required to be present on inbound requests with the configured value
   authorized-headers:
     ExampleHeader1:
@@ -23,8 +23,8 @@ kt-query:
     example value one: example-auditor-1
     example value two: example-auditor-2
 
-metrics-addr: localhost:8083
-health-addr: localhost:8084
+metrics-addr: server:8083
+health-addr: server:8084
 
 # Paste in the keys generated via `go run github.com/signalapp/keytransparency/cmd/generate-keys`
 # DO NOT USE THESE EXAMPLE CREDENTIALS IN PRODUCTION
@@ -44,7 +44,13 @@ api:
   min-monitor-delay: 1s
   jitter-percent: 10
 
+# LevelDB:
+# db:
+#   file: example/db
+
+# DynamoDB:
 db:
-  file: example/db
+  table: kt_local
+  parallel: 2
 
 account-db: mock

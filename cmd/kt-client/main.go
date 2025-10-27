@@ -27,9 +27,9 @@ import (
 var (
 	p = message.NewPrinter(message.MatchLanguage("en"))
 
-	ktQueryServerAddr = flag.String("query-addr", "localhost:8080", "Address of read-only server.")
-	ktServerAddr      = flag.String("kt-addr", "localhost:8082", "Address of read-write server.")
-	testServerAddr    = flag.String("test-addr", "localhost:8081", "Address of test server.")
+	ktQueryServerAddr = flag.String("query-addr", "server:8080", "Address of read-only server.")
+	ktServerAddr      = flag.String("kt-addr", "server:8082", "Address of read-write server.")
+	testServerAddr    = flag.String("test-addr", "server:8081", "Address of test server.")
 	configFile        = flag.String("config", "", "(Optional) Location of server config file.")
 
 	usernameHash     = flag.String("username-hash", "", "Base64url encoded username hash")
