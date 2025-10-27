@@ -85,7 +85,8 @@ docker compose run --rm tests
 Quickstart
 ----------
 
-You can run a key transparency server locally using `DynamoDB`.
+You can run a key transparency server locally using
+[LevelDB](https://github.com/google/leveldb) as a backing database.
 To do so, first generate a new set of private keys:
 
 ```shell

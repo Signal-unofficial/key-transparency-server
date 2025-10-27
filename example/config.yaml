@@ -44,13 +44,8 @@ api:
   min-monitor-delay: 1s
   jitter-percent: 10
 
-# LevelDB:
-# db:
-#   file: example/db
-
-# DynamoDB:
+# LevelDB
 db:
-  table: kt_local
-  parallel: 2
+  file: /db
 
 account-db: mock
