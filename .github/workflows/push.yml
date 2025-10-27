@@ -44,7 +44,7 @@ jobs:
 
       - name: Build and push the Docker image of the KT server
         run: |
-          docker build . --file docker/Dockerfile --build-arg GO_VERSION=${{ steps.setup-go.outputs.go-version }} \
+          docker build . --file Dockerfile --build-arg GO_VERSION=${{ steps.setup-go.outputs.go-version }} \
             --tag "${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO }}:${GITHUB_REF_NAME}"
           docker push "${{ vars.ECR_REGISTRY }}/${{ vars.ECR_REPO }}:${GITHUB_REF_NAME}"
 

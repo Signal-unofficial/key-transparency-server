@@ -6,8 +6,9 @@ cmd/kt-client/kt-client
 cmd/kt-stress/kt-stress
 cmd/generate-keys/generate-keys
 example
-docker
-docker-local
+Docker*
+docker-compose*
+*.docker*
 
 # Different line endings on Windows vs Linux.
 # Will fail if using the wrong line endings

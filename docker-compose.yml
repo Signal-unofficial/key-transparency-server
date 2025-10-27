@@ -4,8 +4,8 @@ services:
     profiles:
       - 'generate-keys'
     build:
-      context: '..'
-      dockerfile: './docker/Dockerfile'
+      context: '.'
+      dockerfile: './Dockerfile'
       target: 'generate-keys'
     network_mode: 'none'
     networks: []
@@ -64,8 +64,8 @@ services:
     links:
       - 'dynamodb'
     build:
-      context: ".."
-      dockerfile: "./docker/Dockerfile"
+      context: "."
+      dockerfile: "./Dockerfile"
       target: "run-server"
     command: [ "-config", "/run/secrets/config.yaml" ]
     environment:
@@ -83,8 +83,8 @@ services:
     links:
       - 'server'
     build:
-      context: ".."
-      dockerfile: "./docker/Dockerfile"
+      context: "."
+      dockerfile: "./Dockerfile"
       target: "run-client"
     entrypoint: [ "sh" ]
     secrets:
@@ -95,4 +95,4 @@ volumes:
   'dynamodb':
 secrets:
   'config':
-    file: '../example/'
+    file: './example/'

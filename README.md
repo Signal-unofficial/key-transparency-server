@@ -89,7 +89,7 @@ You can run a key transparency server locally using `DynamoDB`.
 To do so, first generate a new set of private keys:
 
 ```shell
-docker compose -f ./docker-local/docker-compose.yml run --rm generate-keys
+docker compose run --rm generate-keys
 ```
 
 Copy and paste the keys into `example/config.yaml`. Then run the read-only,
@@ -97,26 +97,26 @@ audit, and test servers locally (all three are required for `kt-client`
 to have full functionality):
 
 ```shell
-docker compose -f docker-local/docker-compose.yml up -d server
+docker compose up -d server
 ```
 
 To shut down the servers:
 
 ```shell
-docker compose -f docker-local/docker-compose.yml down server
+docker compose down server
 ```
 
-To shut down the servers and clients:
+To shut down everything:
 
 ```shell
-docker compose -f docker-local/docker-compose.yml down
+docker compose down
 ```
 
 You can now access metrics and the transparency servers
 at the configured addresses by running `kt-client`:
 
 ```shell
-docker compose -f docker-local/docker-compose.yml run --rm -it client
+docker compose run --rm -it client
 ```
 
 You can interact with the transparency log via this client shell:
