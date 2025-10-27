@@ -1,6 +1,6 @@
-# Test server, used for development
-# kt-test:
-#   server-addr: server:8081
+# Test server, used only for development
+kt-test:
+  server-addr: server:8081
 
 kt:
   server-addr: server:8082

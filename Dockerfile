@@ -1,6 +1,18 @@
 ARG GO_VERSION=golang:1.24.0-alpine
 ARG ALPINE_VERSION=alpine:latest
 
+# Modifies volume permissions: https://stackoverflow.com/a/73255981
+FROM ${ALPINE_VERSION} AS init-volume
+
+WORKDIR /src/
+COPY --link --chmod="+x" [ "./docker/init-volume.sh", "./" ]
+
+ENV NEW_UID=1000
+ENV NEW_GID=1000
+
+VOLUME [ "/vol/" ]
+ENTRYPOINT [ "./init-volume.sh" ]
+
 FROM ${GO_VERSION} AS build-key-generator
 
 COPY [ "./", "/src/" ]

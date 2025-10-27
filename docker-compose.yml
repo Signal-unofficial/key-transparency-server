@@ -29,9 +29,24 @@ services:
       context: '.'
       dockerfile: './Dockerfile'
       target: 'run-stress-test'
-  'dynamodb-init':
+  'dynamodb-init-volume':
+    container_name: 'dynamodb-init-volume'
+    restart: 'no'
+    build:
+      context: '.'
+      dockerfile: './Dockerfile'
+      target: 'init-volume'
+    volumes:
+      - type: 'volume'
+        source: 'leveldb'
+        target: '/vol/'
+    network_mode: 'none'
+  'dynamodb-init-tables':
+    container_name: 'dynamodb-init-tables'
     profiles:
       - 'prod'
+    # Fails if tables have already been initialized
+    restart: 'no'
     depends_on:
       'dynamodb':
         required: true
@@ -60,6 +75,10 @@ services:
   'dynamodb':
     profiles:
       - 'prod'
+    depends_on:
+      'dynamodb-init-volume':
+        required: true
+        condition: 'service_completed_successfully'
     restart: 'on-failure'
     image: amazon/dynamodb-local:2.5.2
     command: [
@@ -70,7 +89,7 @@ services:
       "-sharedDb",
       "-dbPath", "/db/",
       "-optimizeDbBeforeStartup",
-      "-cors", "dynamodb-init,dynamodb,server"
+      "-cors", "dynamodb-init-tables,dynamodb,server"
     ]
     healthcheck:
       timeout: '1s'
@@ -81,6 +100,10 @@ services:
         # Expecting 400 Bad Request, because we require authentication
         "curl --head -o /dev/null -s -w \"%{http_code}\" dynamodb:8000 | grep \"^400$\" > /dev/null"
       ]
+    volumes:
+      - type: 'volume'
+        source: 'leveldb'
+        target: '/db/'
     networks: []
   'server':
     profiles:
@@ -88,8 +111,8 @@ services:
     restart: 'on-failure'
     container_name: 'server'
     depends_on:
-      'dynamodb-init':
-        # Fails if DBs have already been initialized
+      'dynamodb-init-tables':
+        # Fails if tables have already been initialized
         required: false
         condition: 'service_completed_successfully'
     links:
