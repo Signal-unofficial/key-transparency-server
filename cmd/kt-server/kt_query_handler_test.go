@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	mockConfigFile                  = "test_config.yaml"
+	mockConfigFile                  = "/run/secrets/test_config.yaml"
 	validUsernameHash1              = random(32)
 	validPhoneNumber1               = "+14155550101"
 	unidentifiedAccessKey           = random(16)

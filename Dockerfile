@@ -26,6 +26,14 @@ COPY --from=build-key-generator [ "/src/cmd/generate-keys/generate-keys/", "/usr
 WORKDIR /usr/local/bin/
 ENTRYPOINT [ "/usr/local/bin/generate-keys" ]
 
+FROM ${GO_VERSION} AS run-tests
+
+WORKDIR /src/
+COPY [ "./", "./" ]
+
+ENTRYPOINT [ "go", "test" ]
+CMD ["./..."]
+
 FROM ${ALPINE_VERSION} AS run-server
 
 COPY --from=build-server [ "/src/cmd/kt-server/kt-server", "/usr/local/bin/" ]

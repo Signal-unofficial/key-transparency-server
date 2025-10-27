@@ -9,6 +9,8 @@ example
 Docker*
 docker-compose*
 *.docker*
+**/tmp
+**/temp
 
 # Different line endings on Windows vs Linux.
 # Will fail if using the wrong line endings

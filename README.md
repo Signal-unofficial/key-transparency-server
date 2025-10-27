@@ -78,8 +78,8 @@ Tests
 
 To run all tests:
 
-```go
-go test ./...
+```shell
+docker compose run tests
 ```
 
 Quickstart
@@ -106,12 +106,6 @@ To shut down the servers:
 docker compose down server
 ```
 
-To shut down everything:
-
-```shell
-docker compose down
-```
-
 You can now access metrics and the transparency servers
 at the configured addresses by running `kt-client`:
 
@@ -128,12 +122,10 @@ exit
 
 ```shell
 # Add an ACI to the log
-kt-client update aci \
-<UUID> <base64_encoded_aci_identity_key>
+kt-client update aci <UUID> <base64_encoded_aci_identity_key>
 
 # Add an E164 to the log. Be sure to use the same ACI as a previous update.
-kt-client update aci \
-<e164_formatted_number> <UUID>
+kt-client update aci <e164_formatted_number> <UUID>
 
 # Search for the ACI and provide the value it's mapped to
 kt-client search <UUID> <base64_encoded_aci_identity_key>
@@ -147,8 +139,8 @@ To look up a username hash, you must also provide the ACI and ACI identity key:
 ```shell
 # Search for an E164
 kt-client \
--username_hash <base64url_encoded_username_hash> \
-search <UUID> <base64_encoded_aci_identity_key>
+  -username_hash <base64url_encoded_username_hash> \
+  search <UUID> <base64_encoded_aci_identity_key>
 ```
 
 To look up an E164, you must provide the ACI, the ACI identity key, and an unidentified access key.
@@ -157,8 +149,8 @@ If using the `mock` AccountDB configuration, the default `-uak` value matches th
 ```shell
 # Search for an E164
 kt-client \
--e164 <e164_formatted_number> -uak <base64_encoded_uak> \
-search <UUID> <base64_encoded_aci_identity_key>
+  -e164 <e164_formatted_number> -uak <base64_encoded_uak> \
+  search <UUID> <base64_encoded_aci_identity_key>
 ```
 
 To time the latency of a search or monitor request:

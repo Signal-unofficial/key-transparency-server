@@ -26,7 +26,7 @@ kt-query:
 metrics-addr: server:8083
 health-addr: server:8084
 
-# Paste in the keys generated via `go run github.com/signalapp/keytransparency/cmd/generate-keys`
+# Paste in the keys generated via `docker compose run --rm generate-keys`
 # DO NOT USE THESE EXAMPLE CREDENTIALS IN PRODUCTION
 api:
   signing-key: 09518699b29b0e3596d9ad899bcfb2bbdc39a6365123afdf3678a5245a89598c
