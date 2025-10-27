@@ -38,6 +38,7 @@ services:
   'dynamodb':
     restart: 'on-failure'
     image: amazon/dynamodb-local:2.5.2
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data/"]
     healthcheck:
       timeout: '1s'
       test: [
@@ -47,6 +48,10 @@ services:
         # Expecting 400 Bad Request, because we require authentication
         "curl --head -o /dev/null -s -w \"%{http_code}\" dynamodb:8000 | grep \"^400$\" > /dev/null"
       ]
+    volumes:
+      - type: 'volume'
+        source: 'dynamodb'
+        target: '/data'
     networks: []
   'server':
     restart: 'on-failure'
@@ -86,6 +91,8 @@ services:
       - source: 'config'
         target: '/run/secrets/'
     networks: []
+volumes:
+  'dynamodb':
 secrets:
   'config':
     file: '../example/'
