@@ -91,6 +91,16 @@ services:
       - source: 'test-config'
         target: '/run/secrets/'
     networks: []
+  'stress-test':
+    profiles:
+      - 'stress'
+      - 'prod'
+    links:
+      - 'server'
+    build:
+      context: '.'
+      dockerfile: './Dockerfile'
+      target: 'run-stress-test'
   'dynamodb-init':
     profiles:
       - 'prod'

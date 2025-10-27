@@ -7,6 +7,12 @@ COPY [ "./", "/src/" ]
 WORKDIR /src/cmd/generate-keys/
 RUN go build
 
+FROM ${GO_VERSION} AS build-stress-test
+
+COPY [ "./", "/src/" ]
+WORKDIR /src/cmd/kt-stress/
+RUN go build
+
 FROM ${GO_VERSION} AS build-server
 
 COPY [ "./", "/src/" ]
@@ -33,6 +39,13 @@ COPY [ "./", "./" ]
 
 ENTRYPOINT [ "go", "test" ]
 CMD ["./..."]
+
+FROM ${ALPINE_VERSION} AS run-stress-test
+
+COPY --from=build-stress-test [ "/src/cmd/kt-stress/kt-stress", "/usr/local/bin/" ]
+
+WORKDIR /usr/local/bin/
+ENTRYPOINT [ "/usr/local/bin/kt-stress" ]
 
 FROM ${ALPINE_VERSION} AS run-server
 
