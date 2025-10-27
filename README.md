@@ -79,7 +79,10 @@ Tests
 To run all tests:
 
 ```shell
-docker compose run tests
+# Start test containers
+docker compose up tests
+# Remove containers after tests
+docker compose down tests
 ```
 
 Quickstart
