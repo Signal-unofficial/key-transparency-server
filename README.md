@@ -177,6 +177,12 @@ kt-client -config /run/secrets/config.yaml \
   monitor-timing <UUID> <base64_encoded_aci_identity_key>
 ```
 
+Contribution
+------------
+
+See the [TODOs](./TODO.md) for known and currently planned issues.
+If your issue isn't listed here, feel free to submit an issue or PR.
+
 References
 ----------
 
