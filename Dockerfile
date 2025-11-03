@@ -39,9 +39,9 @@ RUN go build
 
 FROM ${ALPINE_VERSION} AS generate-keys
 
-COPY --from=build-key-generator [ "/src/cmd/generate-keys/generate-keys/", "/usr/local/bin/" ]
-
 WORKDIR /usr/local/bin/
+COPY --from=build-key-generator [ "/src/cmd/generate-keys/generate-keys/", "./" ]
+
 ENTRYPOINT [ "/usr/local/bin/generate-keys" ]
 
 FROM ${GO_VERSION} AS run-tests
@@ -54,21 +54,21 @@ CMD ["./..."]
 
 FROM ${ALPINE_VERSION} AS run-stress-test
 
-COPY --from=build-stress-test [ "/src/cmd/kt-stress/kt-stress", "/usr/local/bin/" ]
-
 WORKDIR /usr/local/bin/
+COPY --from=build-stress-test [ "/src/cmd/kt-stress/kt-stress", "./" ]
+
 ENTRYPOINT [ "/usr/local/bin/kt-stress" ]
 
 FROM ${ALPINE_VERSION} AS run-server
 
-COPY --from=build-server [ "/src/cmd/kt-server/kt-server", "/usr/local/bin/" ]
-
 WORKDIR /usr/local/bin/
+COPY --from=build-server [ "/src/cmd/kt-server/kt-server", "./" ]
+
 ENTRYPOINT [ "/usr/local/bin/kt-server" ]
 
 FROM ${ALPINE_VERSION} AS run-client
 
-COPY --from=build-client [ "/src/cmd/kt-client/kt-client", "/usr/local/bin/" ]
-
 WORKDIR /usr/local/bin/
+COPY --from=build-client [ "/src/cmd/kt-client/kt-client", "./" ]
+
 ENTRYPOINT [ "/usr/local/bin/kt-client" ]

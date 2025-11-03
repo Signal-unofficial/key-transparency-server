@@ -1,3 +1,7 @@
+# ==============================================================================
+# ============= DO NOT USE THESE EXAMPLE CREDENTIALS IN PRODUCTION =============
+# ==============================================================================
+
 # Test server, used only for development
 kt-test:
   server-addr: server:8081
@@ -26,20 +30,23 @@ kt-query:
 metrics-addr: server:8083
 health-addr: server:8084
 
-# Paste in the keys generated via `docker compose run --rm generate-keys`
-# DO NOT USE THESE EXAMPLE CREDENTIALS IN PRODUCTION
 api:
+  # Paste in the kt-server keys generated via `docker compose run --rm generate-keys`
   signing-key: 09518699b29b0e3596d9ad899bcfb2bbdc39a6365123afdf3678a5245a89598c
   vrf-key: 1536fdf2c972e4235076d4f0be4fc1cc93789c2649dbe27b7010641e7f29c3c7
   prefix-key: 4023d12223c18d64753e79564c07f58aedcea7a6661a6be559677e3496353901
   opening-key: ee899175e76d818e1ecc9d007d61a7c22d2cb5dd92ca0e5b8b02f8f2a8cd47bf
+
   # fake:
   #   count: 1
   #   interval: 10s
   distinguished: 1m
+
+  # A map of auditor names to their hex-encoded public signature keys. I.e:
+  # printf 'your-auditor-public-key-here' | od -A n -t x1 | tr -d ' \n' && echo
   auditors:
     example-auditor-1: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
-    example-auditor-2: abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcdef1234abcd
+
   min-search-delay: 1s
   min-monitor-delay: 1s
   jitter-percent: 10
