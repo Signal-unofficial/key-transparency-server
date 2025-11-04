@@ -29,6 +29,8 @@ services:
       context: '.'
       dockerfile: './Dockerfile'
       target: 'run-stress-test'
+    networks:
+      'kt-server':
   'dynamodb-init-volume':
     container_name: 'dynamodb-init-volume'
     restart: 'no'
@@ -71,7 +73,8 @@ services:
       AWS_SECRET_ACCESS_KEY: local
       AWS_ENDPOINT_URL: http://dynamodb:8000
       AWS_REGION: local-kt
-    networks: []
+    networks:
+      'kt-server':
   'dynamodb':
     profiles:
       - 'prod'
@@ -104,7 +107,8 @@ services:
       - type: 'volume'
         source: 'leveldb'
         target: '/db/'
-    networks: []
+    networks:
+      'kt-server':
   'server':
     profiles:
       - 'prod'
@@ -130,7 +134,8 @@ services:
     secrets:
       - source: 'config'
         target: '/run/secrets/'
-    networks: []
+    networks:
+      'kt-server':
   'client':
     profiles:
       - 'prod'
@@ -145,7 +150,8 @@ services:
     secrets:
       - source: 'config'
         target: '/run/secrets/'
-    networks: []
+    networks:
+      'kt-server':
 volumes:
   'leveldb':
 secrets:
@@ -153,3 +159,9 @@ secrets:
     file: './cmd/kt-server/example/'
   'config':
     file: './config/'
+networks:
+  'kt-server':
+    name: 'kt-server'
+    driver: 'bridge'
+    enable_ipv4: true
+    enable_ipv6: false
