@@ -11,10 +11,8 @@ kt:
   authorized-headers:
     ExampleHeader1:
       - example value one
-      - example value two
   header-value-to-auditor-name:
     example value one: example-auditor-1
-    example value two: example-auditor-2
 
 kt-query:
   server-addr: server:8080
@@ -22,10 +20,8 @@ kt-query:
   authorized-headers:
     ExampleHeader1:
       - example value one
-      - example value two
   header-value-to-auditor-name:
     example value one: example-auditor-1
-    example value two: example-auditor-2
 
 metrics-addr: server:8083
 health-addr: server:8084
