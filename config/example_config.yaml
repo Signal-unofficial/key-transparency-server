@@ -28,10 +28,10 @@ health-addr: server:8084
 
 api:
   # Paste in the kt-server keys generated via `docker compose run --rm generate-keys`
-  signing-key: 09518699b29b0e3596d9ad899bcfb2bbdc39a6365123afdf3678a5245a89598c
-  vrf-key: 1536fdf2c972e4235076d4f0be4fc1cc93789c2649dbe27b7010641e7f29c3c7
-  prefix-key: 4023d12223c18d64753e79564c07f58aedcea7a6661a6be559677e3496353901
-  opening-key: ee899175e76d818e1ecc9d007d61a7c22d2cb5dd92ca0e5b8b02f8f2a8cd47bf
+  signing-key: 3536ddb5a5fdb205740aaa49314564a2181a45c44aa8af65929bf843fefc5624
+  vrf-key: 712ad5ade10cfe3e784251ebf4f019e65e19e11d735ee2fae5092411935deaaa
+  prefix-key: 1cfadabb9d8c6bab8f3ad846bd3bcb7afcbf7e65d85d02944f07eade76af5969
+  opening-key: 2dceaf33e9491a761cb9462419256fc346da6bcd467b1071a1a0ccddc0ed951b
 
   # fake:
   #   count: 1
