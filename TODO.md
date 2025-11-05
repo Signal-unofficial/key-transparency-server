@@ -9,5 +9,3 @@
   ```Dockerfile
   ENV PATH=${PATH}:/abs/path/to/script
   ```
-
-- Run stress test

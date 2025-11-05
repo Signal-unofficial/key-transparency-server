@@ -76,6 +76,7 @@ services:
     networks:
       'kt-server':
   'dynamodb':
+    container_name: 'dynamodb'
     profiles:
       - 'prod'
     depends_on:
@@ -110,10 +111,10 @@ services:
     networks:
       'kt-server':
   'server':
+    container_name: 'server'
     profiles:
       - 'prod'
     restart: 'on-failure'
-    container_name: 'server'
     depends_on:
       'dynamodb-init-tables':
         # Fails if tables have already been initialized
