@@ -88,8 +88,8 @@ Quickstart
 You can run a key transparency server locally using
 [LevelDB](https://github.com/google/leveldb) as a backing database.
 
-First, copy [`config/example_config.yaml`](./example/example_config.yaml)
-to [`config/config.yaml`](./example/config.yaml).
+First, copy [`config/example_config.yaml`](./config/example_config.yaml)
+to `config/config.yaml`.
 
 Next, generate a new set of private keys:
 
@@ -97,7 +97,7 @@ Next, generate a new set of private keys:
 docker compose run --rm generate-keys
 ```
 
-Copy and paste the keys into [`config.yaml`](./config.yaml).
+Copy and paste the keys into `config/config.yaml`.
 Then run the read-only, audit, and test servers locally
 (all three are required for `kt-client` to have full functionality):
 
