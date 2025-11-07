@@ -50,4 +50,8 @@ api:
 db:
   file: /db
 
-account-db: mock
+# DynamoDB
+# db:
+#   table: 'kt_local'
+#   parallel: 2
+account-db: 'accounts' # 'mock' is treated specially

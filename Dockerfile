@@ -1,5 +1,6 @@
 ARG GO_VERSION=golang:1.24.0-alpine
 ARG ALPINE_VERSION=alpine:latest
+ARG AWS_CLI_VERSION=amazon/aws-cli@sha256:065e642839c546a21ba63ad184a44c510a8ef1130bbe8e2376d819145b5ea039
 
 # Modifies volume permissions: https://stackoverflow.com/a/73255981
 FROM ${ALPINE_VERSION} AS init-volume
@@ -12,6 +13,12 @@ ENV NEW_GID=1000
 
 VOLUME [ "/vol/" ]
 ENTRYPOINT [ "./init-volume.sh" ]
+
+FROM ${AWS_CLI_VERSION} AS init-tables
+
+COPY --link --chmod="+x" [ "./docker/init-tables.sh", "./" ]
+
+ENTRYPOINT [ "./init-tables.sh" ]
 
 FROM ${GO_VERSION} AS build-key-generator
 
