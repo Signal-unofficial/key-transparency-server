@@ -26,48 +26,53 @@ ENV PATH=${PATH}:/src/
 WORKDIR /aws/
 ENTRYPOINT [ "init-tables.sh" ]
 
-# Builds the key generator
-FROM ${GO_VERSION} AS build-key-generator
+# Builds the entire project
+FROM ${GO_VERSION} AS build
 
-COPY [ "./", "/src/" ]
+WORKDIR /src/
+COPY [ "./", "./" ]
+
 WORKDIR /src/cmd/generate-keys/
 RUN go build
 
-# Builds the stress test
-FROM ${GO_VERSION} AS build-stress-test
-
-COPY [ "./", "/src/" ]
-WORKDIR /src/cmd/kt-stress/
-RUN go build
-
-# Builds the server
-FROM ${GO_VERSION} AS build-server
-
-COPY [ "./", "/src/" ]
 WORKDIR /src/cmd/kt-server/
 RUN go build
 
-# Builds the client
-FROM ${GO_VERSION} AS build-client
-
-COPY [ "./", "/src/" ]
 WORKDIR /src/cmd/kt-client/
 RUN go build
+
+WORKDIR /src/cmd/kt-stress/
+RUN go build
+
+WORKDIR /src/cmd/generate-auditing-test-vectors/
+RUN go build
+
+# Runs the auditing test vector generator
+FROM ${ALPINE_VERSION} AS generate-auditing-test-vectors
+
+WORKDIR /src/
+COPY --link --chmod="+x" --from=build [ \
+    "/src/cmd/generate-auditing-test-vectors/generate-auditing-test-vectors", \
+    "./" \
+]
+ENV PATH=${PATH}:/src/
+
+ENTRYPOINT [ "generate-auditing-test-vectors" ]
 
 # Runs the key generator
 FROM ${ALPINE_VERSION} AS generate-keys
 
 WORKDIR /src/
-COPY --from=build-key-generator [ "/src/cmd/generate-keys/generate-keys/", "./" ]
+COPY --link --chmod="+x" --from=build [ "/src/cmd/generate-keys/generate-keys", "./" ]
 ENV PATH=${PATH}:/src/
 
 ENTRYPOINT [ "generate-keys" ]
 
-# Builds and runs the module tests
+# Runs the module tests
 FROM ${GO_VERSION} AS run-tests
 
 WORKDIR /src/
-COPY --link [ "./", "./" ]
+COPY --link --from=build [ "/src/", "./" ]
 
 ENTRYPOINT [ "go", "test" ]
 CMD [ "./..." ]
@@ -76,7 +81,7 @@ CMD [ "./..." ]
 FROM ${ALPINE_VERSION} AS run-stress-test
 
 WORKDIR /src/
-COPY --from=build-stress-test [ "/src/cmd/kt-stress/kt-stress", "./" ]
+COPY --link --chmod="+x" --from=build [ "/src/cmd/kt-stress/kt-stress", "./" ]
 ENV PATH=${PATH}:/src/
 
 ENTRYPOINT [ "kt-stress" ]
@@ -85,7 +90,7 @@ ENTRYPOINT [ "kt-stress" ]
 FROM ${ALPINE_VERSION} AS run-server
 
 WORKDIR /src/
-COPY --from=build-server [ "/src/cmd/kt-server/kt-server", "./" ]
+COPY --link --chmod="+x" --from=build [ "/src/cmd/kt-server/kt-server", "./" ]
 ENV PATH=${PATH}:/src/
 
 ENTRYPOINT [ "kt-server" ]
@@ -94,7 +99,7 @@ ENTRYPOINT [ "kt-server" ]
 FROM ${ALPINE_VERSION} AS run-client
 
 WORKDIR /src/
-COPY --from=build-client [ "/src/cmd/kt-client/kt-client", "./" ]
+COPY --link --chmod="+x" --from=build [ "/src/cmd/kt-client/kt-client", "./" ]
 ENV PATH=${PATH}:/src/
 
 ENTRYPOINT [ "kt-client" ]
