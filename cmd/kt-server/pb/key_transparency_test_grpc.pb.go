@@ -89,7 +89,7 @@ type UnsafeKeyTransparencyTestServiceServer interface {
 }
 
 func RegisterKeyTransparencyTestServiceServer(s grpc.ServiceRegistrar, srv KeyTransparencyTestServiceServer) {
-	// If the following call pancis, it indicates UnimplementedKeyTransparencyTestServiceServer was
+	// If the following call panics, it indicates UnimplementedKeyTransparencyTestServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
