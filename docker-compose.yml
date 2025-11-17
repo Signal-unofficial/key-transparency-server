@@ -31,8 +31,8 @@ services:
       target: 'run-stress-test'
     networks:
       'kt-server':
-  'dynamodb-init-volume':
-    container_name: 'dynamodb-init-volume'
+  'init-volume':
+    container_name: 'init-volume'
     restart: 'no'
     build:
       context: '.'
@@ -43,8 +43,8 @@ services:
         source: 'kt-db'
         target: '/vol/'
     network_mode: 'none'
-  'dynamodb-init-tables':
-    container_name: 'dynamodb-init-tables'
+  'init-tables':
+    container_name: 'init-tables'
     profiles:
       - 'prod'
     # Fails if tables have already been initialized
@@ -73,7 +73,7 @@ services:
     profiles:
       - 'prod'
     depends_on:
-      'dynamodb-init-volume':
+      'init-volume':
         required: true
         condition: 'service_completed_successfully'
     restart: 'on-failure'
@@ -86,7 +86,7 @@ services:
       "-sharedDb",
       "-dbPath", "/db/",
       "-optimizeDbBeforeStartup",
-      "-cors", "dynamodb-init-tables,dynamodb,server"
+      "-cors", "init-tables,dynamodb,server"
     ]
     healthcheck:
       timeout: '1s'
@@ -109,7 +109,7 @@ services:
       - 'prod'
     restart: 'on-failure'
     depends_on:
-      'dynamodb-init-tables':
+      'init-tables':
         # Fails if tables have already been initialized
         required: false
         condition: 'service_completed_successfully'
