@@ -67,6 +67,8 @@ type ServiceConfig struct {
 	AuthorizedHeaders map[string][]string `yaml:"authorized-headers"`
 	// a map of header values to auditor name. each key in this map should match a value in the AuthorizedHeaders map.
 	HeaderValueToAuditorName map[string]string `yaml:"header-value-to-auditor-name"`
+	// logs gRPC traffic
+	LogTraffic bool `yaml:"log-traffic"`
 }
 
 type APIConfig struct {

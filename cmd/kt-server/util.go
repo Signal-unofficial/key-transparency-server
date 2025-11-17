@@ -10,6 +10,7 @@ import (
 	"context"
 	"crypto/subtle"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/go-metrics"
@@ -72,9 +73,35 @@ func getServerOptions(config *config.ServiceConfig, additionalInterceptors []grp
 		interceptors = append(interceptors, additionalInterceptors...)
 	}
 
+	// Wrapping interceptor chain in traffic loggers
+	if config.LogTraffic {
+		interceptors = append(
+			[]grpc.UnaryServerInterceptor{inboundTrafficLogger},
+			interceptors...)
+		interceptors = append(interceptors, outboundTrafficLogger)
+	}
+
 	return []grpc.ServerOption{
 		grpc.ChainUnaryInterceptor(interceptors...),
 	}
+}
+
+// Logs inbound gRPC requests
+func inboundTrafficLogger(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+	log.Printf("[DEBUG] Inbound (%s): %v\n", info.FullMethod, req)
+
+	return handler(ctx, req)
+}
+
+// Logs outbound gRPC requests
+func outboundTrafficLogger(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+	resp, err = handler(ctx, req)
+
+	if err != nil && resp != nil {
+		log.Printf("[DEBUG] Outbound: %v\n", resp)
+	}
+
+	return resp, err
 }
 
 func storeAuditorNameInterceptor(config *config.ServiceConfig) func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {

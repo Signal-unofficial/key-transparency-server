@@ -2,12 +2,15 @@
 # ============= DO NOT USE THESE EXAMPLE CREDENTIALS IN PRODUCTION =============
 # ==============================================================================
 
-# Test server, used only for development
+# Test server, used for development
 kt-test:
   server-addr: server:8081
+  log-traffic: true # Logs gRPC traffic
 
 kt:
   server-addr: server:8082
+  log-traffic: false # Logs gRPC traffic
+  # at least one header-value mapping in this map will be required to be present on inbound requests with the configured value
   authorized-headers:
     ExampleHeader1:
       - example value one
@@ -16,6 +19,7 @@ kt:
 
 kt-query:
   server-addr: server:8080
+  log-traffic: false # Logs gRPC traffic
   # at least one header-value mapping in this map will be required to be present on inbound requests with the configured value
   authorized-headers:
     ExampleHeader1:
