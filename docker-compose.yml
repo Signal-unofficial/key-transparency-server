@@ -146,6 +146,21 @@ services:
         target: '/run/secrets/'
     networks:
       'kt-server':
+  'tcpdump':
+    container_name: 'tcpdump'
+    profiles:
+      - 'debug'
+      - 'prod'
+    depends_on:
+      - 'server'
+    image: 'kaazing/tcpdump@sha256:53a14752626e7581d4631bfa1851258546d47fea5a70fd7fd5b5f8f2156a7ab0'
+    volumes:
+      - type: 'bind'
+        source: './tcpdump'
+        target: '/tcpdump'
+    network_mode: 'container:server'
+    networks:
+      'kt-server':
 volumes:
   'kt-db':
 secrets:

@@ -10,3 +10,4 @@ cmd/generate-keys/generate-keys
 **/temp
 config/**
 !config/example_config.yaml
+tcpdump
