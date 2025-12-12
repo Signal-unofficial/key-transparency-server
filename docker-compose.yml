@@ -161,6 +161,29 @@ services:
     network_mode: 'container:server'
     networks:
       'kt-server':
+  'grpcurl':
+    container_name: 'grpcurl'
+    profiles:
+      - 'debug'
+      - 'prod'
+    depends_on:
+      - 'server'
+    image: 'fullstorydev/grpcurl:v1.9.3-alpine@sha256:4614424ed58e9b9837c48b6b8eadb9ef40491d5af3499bcc8b378e9c64a9e4a9'
+    entrypoint: [ '/bin/sh' ]
+    working_dir: '/project/'
+    tty: true
+    volumes:
+      - type: 'bind'
+        source: './cmd/'
+        target: '/project/cmd/'
+        read_only: true
+      - type: 'bind'
+        source: './tree/'
+        target: '/project/tree/'
+        read_only: true
+    network_mode: 'container:server'
+    networks:
+      'kt-server':
 volumes:
   'kt-db':
 secrets:
