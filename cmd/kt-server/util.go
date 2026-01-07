@@ -73,6 +73,10 @@ func getServerOptions(config *config.ServiceConfig, additionalInterceptors []grp
 		interceptors = append(interceptors, additionalInterceptors...)
 	}
 
+	if config.Mtls {
+		// TODO mTLS authentication
+	}
+
 	// Wrapping interceptor chain in traffic loggers
 	if config.LogTraffic {
 		interceptors = append(
