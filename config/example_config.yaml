@@ -5,12 +5,10 @@
 # Test server, used for development
 kt-test:
   server-addr: server:8081
-  mtls: false
   log-traffic: true # Logs gRPC traffic
 
 kt:
   server-addr: server:8082
-  mtls: true
   log-traffic: false # Logs gRPC traffic
   # at least one header-value mapping in this map will be required to be present on inbound requests with the configured value
   authorized-headers:
@@ -21,7 +19,6 @@ kt:
 
 kt-query:
   server-addr: server:8080
-  mtls: false
   log-traffic: false # Logs gRPC traffic
   # at least one header-value mapping in this map will be required to be present on inbound requests with the configured value
   authorized-headers:
